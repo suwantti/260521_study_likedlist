@@ -1,0 +1,130 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct data{
+    int num;
+    char name[20];
+    struct data * next;
+}data;
+
+data * g_head = NULL;
+data * g_tail = NULL;
+
+void print_All()
+{
+    if(g_head == NULL){
+        printf("no data");
+        return;
+    }
+
+    data * temp = g_head;
+
+            while(temp->next){
+            printf("=====s=====\n");
+            printf("num : %d\n", temp -> num);
+            printf("name : %s\n", temp -> name);
+            printf("=====e=====\n");
+            temp = temp -> next;
+            }
+            printf("=====s=====\n");
+            printf("num : %d\n", temp -> num);
+            printf("name : %s\n", temp -> name);
+            printf("=====e=====\n");
+}
+
+int insert(int num, char * name)
+{
+    data * node = malloc(sizeof(data));
+
+    node -> num = num;
+    
+    if(name != NULL){
+        strcpy(node -> name, name);
+    }
+    node -> next = NULL;
+
+    if(g_head == NULL){
+        g_head = node;
+        g_tail = node;
+        return 1;
+    }
+    else{
+        data * temp = g_head;
+
+        while(temp -> next){
+                temp = temp -> next;
+        }
+            temp -> next = node;
+            g_tail = node;
+            return 1;
+    }
+    return 0;
+}
+
+data * pop()
+{
+    if(g_head == NULL){
+        return NULL;
+    }
+
+    data * node = g_head;
+    
+
+    if(g_head -> next != NULL){
+        g_head = g_head -> next;
+    }
+    else{
+        g_head = NULL;
+        g_tail = NULL;
+    }
+    
+
+    return node;
+}
+
+data * statck_pop()
+{
+    if(g_head == NULL){
+        return NULL;
+    }
+
+    data * node = g_tail;
+
+    data * temp = g_head;
+    data * before = NULL;
+
+        while(temp -> next){
+            before = temp;
+            temp = temp -> next;
+        }
+            g_tail = before;
+            if(before != NULL){
+                before -> next = NULL;
+            }
+            if(g_tail == NULL){
+                g_head = NULL;
+            }
+      return node;
+}
+
+int main()
+{
+    char name[20] = "";
+
+    for(int i=0; i<10; i++){
+        sprintf(name, "test%d",i);
+        insert(i, name);
+    }
+    print_All();
+
+    for(int i=0; i<10; i++){
+        data * node1 = pop();
+        printf("==========s==========\n");
+        printf("pop num : %d\n", node1 -> num);
+        printf("pop name : %s\n", node1 -> name);
+        printf("==========e==========\n");
+        free(node1);
+        print_All();
+    }
+}
